@@ -1,0 +1,24 @@
+AIQX
+Use Cases
+
+Initial feasibility check completed: {{useCaseName}}
+
+
+Our first feasibility examination completed successfully. 
+It seems like your use case can be implemented by AIQX!
+
+You may continue with the ordering process in AIQX Self Service.
+
+
+
+Continue with order: {{orderUrl}} 
+
+
+
+Your AIQX team</div>
+info_aiqx@bmw.de
+
+
+Please do not respond to this email.
+This email was generated and sent automatically.
+You may contact the AIQX team using the email address provided above this text.

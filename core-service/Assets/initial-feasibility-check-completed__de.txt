@@ -1,0 +1,24 @@
+AIQX
+Use Cases
+
+Erste Machbarkeitsprüfung erfolgreich: {{useCaseName}}
+
+
+Nach einer ersten Machbarkeitsprüfung kann die gewünschte 
+Absicherung grundsätzlich durch AIQX umgesetzt werden.
+
+Sie können im AIQX Self Service Portal mit der Bestellung fortfahren.
+
+
+
+Mit Bestellung fortfahren: {{orderUrl}}
+
+
+Ihr AIQX-Team
+info_aiqx@bmw.de
+
+
+
+Bitte antworten Sie nicht auf diese E-Mail.
+Diese E-Mail wurde automatisch generiert und versandt.
+Bei Rückfragen erreichen Sie das AIQX-Team unter der oben angegebene E-Mail-Adresse.

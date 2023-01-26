@@ -1,0 +1,63 @@
+version: "3.7"
+
+volumes:
+  mssqldata: {}
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.shell
+    image: aiqx-services
+    hostname: aiqx-services
+    working_dir: /app
+    depends_on:
+      - db
+      - maildev
+    volumes:
+      - ./:/app:z
+      - "${SSH_AUTH_SOCK:-/tmp/_ssh_auth_sock_stub}:${SSH_AUTH_SOCK:-/tmp/_ssh_auth_sock_stub}"
+    ports:
+      - 4010:4010
+      - 4020:4020
+    environment:
+      SSH_AUTH_SOCK: "${SSH_AUTH_SOCK:-/tmp/_ssh_auth_sock_stub}"
+      APP_DB_HOST: db
+      APP_DB_NAME: app
+      APP_DB_USER: sa
+      APP_DB_PASS: appDbPass!
+      APP_MSSQL_CONNSTR: Server=db,1433;Database=app;User Id=sa;Password=appDbPass!;
+      APP_SMTP_CONN_HOST: maildev
+      APP_SMTP_CONN_PORT: 25
+      APP_SMTP_SENDER_NAME: root
+      APP_SMTP_SENDER_ADDRESS: admin@domain.com
+      APP_SMTP_RECIPIENT_ADDRESSES: test1@domain.com,test2@domain.com
+      APP_PORT_CORE: 4010
+      APP_PORT_FILE: 4020
+      APP_FRONTEND_USE_CASE_DETAIL_URL: http://localhost:4200/#/use-cases
+      APP_FILE_SERVICE_URL: http://localhost:4020
+      APP_INTERNAL_TOKEN_SECRET: "PW6RYVERXI0SQE/+2WrV1mWHtKVItHi5Ec8tkbMDYFk9eGVjW9yZ4Z3WOk8PtSzTS6U2jhzwtBPKtOY2VJLzwCB5BEWFNT6ou4gfiYT2pRNyqMHdAZFNiqYlc/B/VyU+PMsvXiXpDrqqpBkSQhU6qYwWb6Gi8vGMe/aPlvGVIO69YBD6bKauWkKHisiWSUBBo2RWuGe/CXetWVrzvNH+yw6bQjtTqOYqNZTK2VJNCjWjbVru/HkDlSdRq2UMehhPAHWyPZqE3eClVifTnvuZiZFHcKjx+SLm/V/VO0WvJFgupgnhjS5EhyZlfGUcVlm+1EZsp1mBIYejJoaNkV5OUg=="
+    stdin_open: true
+    tty: true
+
+  db:
+    build:
+      context: .
+      dockerfile: _fixture/mssql
+    image: mssql
+    hostname: db
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: appDbPass!
+      MSSQL_AGENT_ENABLED: "true"
+    volumes:
+      - mssqldata:/var/opt/mssql/data
+
+  maildev:
+    image: maildev/maildev
+    hostname: maildev
+    ports:
+      - 1025:61025
+      - 1080:80

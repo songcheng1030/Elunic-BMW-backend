@@ -1,0 +1,21 @@
+AIQX
+Use Cases
+
+Final feasibility check: {{useCaseName}}
+
+
+The AIQX team will now conduct a final feasibility check 
+of you use case with the newly provided information.
+
+An email will be sent to you upon completion to inform 
+you about the results and next steps.
+
+
+
+Your AIQX team
+info_aiqx@bmw.der
+
+
+Please do not respond to this email.
+This email was generated and sent automatically.
+You may contact the AIQX team using the email address provided above this text.

@@ -1,0 +1,197 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Plants API"
+basePath: "/v1"
+tags:
+  - name: "plant"
+schemes:
+  - "https"
+paths:
+  /plants:
+    get:
+      tags:
+        - "plant"
+      summary: "Get all plants"
+      description: ""
+      operationId: "getPlants"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "All plants"
+          required: true
+          schema:
+            $ref: "#/definitions/Plant"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/PlantsApiResponse"
+        "405":
+          description: "Invalid input"
+    post:
+      tags:
+        - "plant"
+      summary: "Add a new plant"
+      description: ""
+      operationId: "addPlant"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Plant that needs to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/Plant"
+      responses:
+        "201":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/PlantApiResponse"
+        "405":
+          description: "Invalid input"
+
+  /plant/{plantId}:
+    get:
+      tags:
+        - "plant"
+      summary: "Find plant by ID"
+      description: "Returns a single plant"
+      operationId: "getPlantById"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "plantId"
+          in: "path"
+          description: "ID of plant"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/PlantApiResponse"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Plant not found"
+    put:
+      tags:
+        - "plant"
+      summary: "Update an existing plant"
+      description: ""
+      operationId: "updatePlant"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "plantId"
+          in: "path"
+          description: "ID of plant"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "Plant that needs to be updated"
+          required: true
+          schema:
+            $ref: "#/definitions/PlantUpdate"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/PlantApiResponse"
+        "405":
+          description: "Invalid input"
+    delete:
+      tags:
+        - "plant"
+      summary: "Deletes a Plant"
+      description: ""
+      operationId: "deletePlant"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "plantId"
+          in: "path"
+          description: "Plant id to delete"
+          required: true
+          type: "string"
+      responses:
+        "203":
+          description: "successful operation"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Plant not found"
+
+definitions:
+  ApiResponse:
+    type: "object"
+    properties:
+      data:
+        type: "object"
+      meta:
+        type: "object"
+  PlantApiResponse:
+    type: "object"
+    properties:
+      data:
+        $ref: "#/definitions/Plant"
+      meta:
+        type: "object"
+  PlantsApiResponse:
+    type: "object"
+    properties:
+      data:
+        type: "array"
+        items:
+          $ref: "#/definitions/Plant"
+      meta:
+        type: "object"
+  Plant:
+    type: "object"
+    required:
+      - "name"
+      - "country"
+    properties:
+      id:
+        type: "string"
+        readOnly: true
+      name:
+        type: "string"
+        example: "PO1 Munich"
+      country:
+        type: "string"
+        example: "Germany"
+      useCaseIds:
+        type: "array"
+        readOnly: true
+        items:
+          type: "string"
+
+  PlantUpdate:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        readOnly: true
+      name:
+        type: "string"
+        example: "PO1 Munich"
+      country:
+        type: "string"
+        example: "Germany"
+      useCaseIds:
+        type: "array"
+        readOnly: true
+        items:
+          type: "string"

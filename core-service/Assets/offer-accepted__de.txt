@@ -1,0 +1,21 @@
+AIQX
+Use Cases
+
+Bestätigung: Angebot akzeptiert {{useCaseName}}
+
+
+Danke das Sie sich für AIQX entschieden haben!
+
+Das AIQX-Team wird Sie demnächst kontaktieren 
+und das weitere Vorgehen mit Ihnen besprechen.
+
+
+
+
+Ihr AIQX-Team
+info_aiqx@bmw.de
+
+
+Bitte antworten Sie nicht auf diese E-Mail.
+Diese E-Mail wurde automatisch generiert und versandt.
+Bei Rückfragen erreichen Sie das AIQX-Team unter der oben angegebene E-Mail-Adresse.

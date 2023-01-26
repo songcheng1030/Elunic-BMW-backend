@@ -1,0 +1,21 @@
+AIQX
+Use Cases
+
+Confirmation: Offer accepted {{useCaseName}}
+
+
+Thank you for choosing AIQX.
+
+A member of our team will contact you soon 
+to discuss further steps and details.
+
+
+
+
+Your AIQX team
+info_aiqx@bmw.de
+
+
+Please do not respond to this email.
+This email was generated and sent automatically.
+You may contact the AIQX team using the email address provided above this text.

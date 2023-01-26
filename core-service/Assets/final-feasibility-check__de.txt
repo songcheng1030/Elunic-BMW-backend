@@ -1,0 +1,21 @@
+AIQX
+Use Cases
+
+Abschließende Machbarkeitsprüfung: {{useCaseName}}
+
+
+Ihr Use Case wird jetzt seitens AIQX einer finalen 
+Machbarkeitsprüfung unterzogen.
+
+Nach Abschluss werden Sie per E-Mail über das 
+Ergebnis und die nächsten Schritte informiert.
+
+
+
+Ihr AIQX-Team
+info_aiqx@bmw.de
+
+
+Bitte antworten Sie nicht auf diese E-Mail.
+Diese E-Mail wurde automatisch generiert und versandt.
+Bei Rückfragen erreichen Sie das AIQX-Team unter der oben angegebene E-Mail-Adresse.

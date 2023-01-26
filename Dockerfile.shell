@@ -1,0 +1,6 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0
+
+RUN mkdir /usr/dotnet
+RUN chown 1000:1000 -R /usr/dotnet
+
+ENV DOTNET_CLI_HOME /usr/dotnet

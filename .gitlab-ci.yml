@@ -1,0 +1,86 @@
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_HOST: "tcp://127.0.0.1:2375"
+
+services:
+  - name: docker:stable-dind
+    command: ["--registry-mirror", "http://dockerhub-cache.dockerhub-cache.svc.cluster.local"] 
+
+stages:
+  - build
+  - push
+
+# =======================================================================================
+# Build stage
+# =======================================================================================
+
+# Template ------------------------------------------------------------------------------
+
+.build:
+  stage: build
+  image: docker:stable
+  tags:
+    - kubernetes
+  script:
+    - apk add jq
+    - docker build -f ${SERVICE_NAME}/Dockerfile -t ${IMAGE_NAME}:${CI_COMMIT_SHA} .
+    - docker save ${IMAGE_NAME}:${CI_COMMIT_SHA} > ${ARTIFACTS_BASE_PATH:-./}image.tar
+  artifacts:
+    expire_in: 1 hrs
+    paths:
+      - ${ARTIFACTS_BASE_PATH:-./}image.tar
+
+# Microservices -------------------------------------------------------------------------
+
+build core-service:
+  extends: .build
+  variables:
+    SERVICE_NAME: core-service
+    IMAGE_NAME: core-service
+
+build file-service:
+  extends: .build
+  variables:
+    SERVICE_NAME: file-service
+    IMAGE_NAME: file-service
+
+# =======================================================================================
+# Push stage (to ACR)
+# =======================================================================================
+
+# Template ------------------------------------------------------------------------------
+
+.push:
+  stage: push
+  image: docker:stable
+  tags:
+    - kubernetes
+  script:
+    - apk add jq
+    - docker load < ${ARTIFACTS_BASE_PATH:-./}image.tar
+    - if [ "$CI_COMMIT_BRANCH" = "master" ]; then DOCKER_IMAGE_NAME_POSTFIX=""; else DOCKER_IMAGE_NAME_POSTFIX="-$CI_COMMIT_BRANCH"; fi
+    - docker login ${DOCKER_REGISTRY_ELUNIC} --username "${DOCKER_USERNAME_ELUNIC}" --password "${DOCKER_PASSWORD_ELUNIC}"
+    - docker tag ${IMAGE_NAME}:${CI_COMMIT_SHA} ${DOCKER_REGISTRY_ELUNIC}/${IMAGE_NAME}${DOCKER_IMAGE_NAME_POSTFIX}:latest
+    - docker push ${DOCKER_REGISTRY_ELUNIC}/${IMAGE_NAME}${DOCKER_IMAGE_NAME_POSTFIX}:latest
+  only: 
+    - master
+    - testing
+
+# Microservices -------------------------------------------------------------------------
+
+push core-service:
+  extends: .push
+  dependencies:
+    - build core-service
+  variables:
+    SERVICE_NAME: core-service
+    IMAGE_NAME: core-service
+
+push file-service:
+  extends: .push
+  dependencies:
+    - build file-service  
+  variables:
+    SERVICE_NAME: file-service
+    IMAGE_NAME: file-service

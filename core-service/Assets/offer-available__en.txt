@@ -1,0 +1,23 @@
+AIQX
+Use Cases
+
+Use case can be implemented: {{useCaseName}}
+
+
+Your use case can be implemented by AIQX.
+
+Please review the corresponding offer in AIQX self-service 
+by clicking the button below.
+
+
+View offer: {{offerUrl}}
+
+
+
+Your AIQX team
+info_aiqx@bmw.de
+
+
+Please do not respond to this email.
+This email was generated and sent automatically.
+You may contact the AIQX team using the email address provided above this text.

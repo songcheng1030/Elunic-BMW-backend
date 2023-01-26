@@ -1,0 +1,24 @@
+AIQX
+Use Cases
+
+Use case can not be implemented: {{useCaseName}}
+
+
+Unfortunately your use case has been classified as not implementable 
+after evaluation of the newly received information.
+
+You can find detailed justification at the AIQX self-service portal.
+
+View justification: {{justificationUrl}}
+
+If you have any questions or inquiries, 
+you may reach us at the email address provided below.
+
+
+Your AIQX team
+info_aiqx@bmw.de
+
+
+Please do not respond to this email.
+This email was generated and sent automatically.
+You may contact the AIQX team using the email address provided above this text.

@@ -1,0 +1,24 @@
+AIQX
+Use Cases
+
+Use Case nicht umsetzbar: {{useCaseName}}
+
+
+Leider wurde Ihr Use Case nach Bewertung der neu erhaltenen 
+Informationen als nicht umsetzbar eingestuft.
+
+Ausführliche Begründungsdetails finden Sie im AIQX Self Service Portal.
+
+Begründung ansehen: {{justificationUrl}}
+
+Bei Unklarheiten oder Fragen können Sie uns unter der 
+unten angegebenen Adresse erreichen.
+
+
+Ihr AIQX-Team
+info_aiqx@bmw.de
+
+
+Bitte antworten Sie nicht auf diese E-Mail.
+Diese E-Mail wurde automatisch generiert und versandt.
+Bei Rückfragen erreichen Sie das AIQX-Team unter der oben angegebene E-Mail-Adresse.

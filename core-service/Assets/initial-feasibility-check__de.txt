@@ -1,0 +1,24 @@
+AIQX
+Self Service
+
+Erste Machbarkeitsprüfung läuft: {{useCaseName}}
+
+
+Vielen Dank für Ihre Anfrage!
+
+Ihr Use Case wird nun seitens AIQX einer ersten Machbarkeitsprüfung 
+unterzogen. Dabei wird geprüft, ob die gewünschte Absicherung durch 
+AIQX umgesetzt werden kann.
+
+Nach Abschluss werden Sie per E-Mail über das 
+Ergebnis und die nächsten Schritte informiert.
+
+
+
+Ihr AIQX-Team
+info_aiqx@bmw.de
+
+
+Bitte antworten Sie nicht auf diese E-Mail.
+Diese E-Mail wurde automatisch generiert und versandt.
+Bei Rückfragen erreichen Sie das AIQX-Team unter der oben angegebene E-Mail-Adresse.

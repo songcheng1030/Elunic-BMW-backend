@@ -1,0 +1,713 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: File service
+  description: This is the API of a file microservice providing access to store files.
+servers:
+- url: http://file-service.vbox:4080/v1
+tags:
+- name: uploads
+  description: "Upload and management related endpoints"
+- name: fetch
+  description: "Query for binaries"
+- name: access
+  description: "Endpoints to manage access to the resources"
+paths:
+
+  /files:
+    post:
+      tags:
+      - uploads
+      parameters:
+      - name: refId
+        in: query
+        description: "ID of referenced entity"
+        schema:
+          type: string
+      - name: tags
+        in: query
+        description: "File's tags"
+        schema:
+          type: array
+          items:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileBody'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileData'
+
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        default:
+          $ref: '#/components/responses/InternalError'
+      security:
+      - bearerAuth: []
+
+    get:
+      tags:
+      - fetch
+      description: "Fetches meta information of files"
+      parameters:
+      - name: refId
+        in: query
+        description: "Filter all files with this `refId`"
+        required: true
+        schema:
+          type: string
+      - name: tags
+        in: query
+        description: "Filter all binaries with this `tags`"
+        schema:
+          type: array
+          items:
+            type: string
+      - name: contentType
+        in: query
+        description: "Filter all binaries by contentType"
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: "Filter by files number limit"
+        schema:
+          type: number
+      - name: offset
+        in: query
+        description: "Filter files by pagination offset"
+        schema:
+          type: number
+      - name: order
+        in: query
+        description: "Filter files by order"
+        schema:
+          type: string
+          enum: [created_at ASC, created_at DESC, updated_at ASC, updated_at DESC, size ASC, size DESC, content_type ASC, content_type DESC]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FileData"
+
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        default:
+          $ref: '#/components/responses/InternalError'
+      security:
+      - bearerAuth: []
+
+  /files/{id}:
+    get:
+      tags:
+      - fetch
+      description: "Fetches meta information of the file"
+      parameters:
+      - name: id
+        in: path
+        description: "ID of file for fetch"
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/FileData"
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        default:
+          $ref: '#/components/responses/InternalError'
+      security:
+      - bearerAuth: []
+
+    put:
+      tags:
+      - uploads
+      parameters:
+      - name: id
+        in: path
+        description: "ID of file for update"
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: "A partial JSON with the values to store/update for this entity."
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/FileDataUpdate"
+      responses:
+        '200':
+          description: "The complete, changed object."
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/FileData"
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        default:
+          $ref: '#/components/responses/InternalError'
+      security:
+      - bearerAuth: []
+
+    delete:
+      tags:
+      - uploads
+      parameters:
+      - name: id
+        in: path
+        description: "ID of file for delete"
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        default:
+          $ref: '#/components/responses/InternalError'
+      security:
+      - bearerAuth: []
+
+
+  /files/{id}/thumbnail/{token}:
+    get:
+      tags:
+      - access
+      description: "If the file identified by id `id` is an image file a thumbnail image is send otherwise an file icon representing best the filetype is sent."
+      parameters:
+      - name: token
+        in: path
+        description: "Security token for get access full file's thumbnail URL"
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: "File ID"
+        required: true
+        schema:
+          type: string
+      - name: width
+        in: query
+        description: "Thumbnail width in pixels"
+        schema:
+          type: string
+      - name: height
+        in: query
+        description: "Thumbnail height in pixels"
+        schema:
+          type: string
+      - name: fit
+        in: query
+        description: "Thumbnail fit"
+        schema:
+          type: string
+          enum: [contain, cover, none]
+      responses:
+        '200':
+          description: OK
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        default:
+          $ref: '#/components/responses/InternalError'
+
+  /files/{id}/download/{token}:
+    get:
+      tags:
+      - access
+      description: "Returns the file stored under the `id` with the original MIME type"
+      parameters:
+      - in: header
+        name: Range
+        schema:
+          type: string
+      - name: token
+        in: path
+        description: "Security token for get access full file URL"
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: "File ID"
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/gif:
+              schema:
+                type: string
+                format: binary
+
+            video/mpeg:
+              schema:
+                type: string
+                format: binary
+            video/mp4:
+              schema:
+                type: string
+                format: binary
+            video/x-msvideo:
+              schema:
+                type: string
+                format: binary
+            video/x-sgi-movie:
+              schema:
+                type: string
+                format: binary
+
+            text/plain:
+              schema:
+                type: string
+                format: binary
+            text/comma-separated-values:
+              schema:
+                type: string
+                format: binary
+
+            application/msexcel:
+              schema:
+                type: string
+                format: binary
+            application/mspowerpoint:
+              schema:
+                type: string
+                format: binary
+            application/msword:
+              schema:
+                type: string
+                format: binary
+
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+            application/zip:
+              schema:
+                type: string
+                format: binary
+            application/gzip:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: string
+                format: binary
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        default:
+          $ref: '#/components/responses/InternalError'
+
+  /files/{id}/thumbnail:
+    get:
+      tags:
+      - access
+      description: "If the file identified by id `id` is an image file a thumbnail image is send otherwise an file icon representing best the filetype is sent."
+      parameters:
+      - name: id
+        in: path
+        description: "File ID"
+        required: true
+        schema:
+          type: string
+      - name: width
+        in: query
+        description: "Thumbnail width in pixels"
+        schema:
+          type: string
+      - name: height
+        in: query
+        description: "Thumbnail height in pixels"
+        schema:
+          type: string
+      - name: fit
+        in: query
+        description: "Thumbnail fit"
+        schema:
+          type: string
+          enum: [contain, cover, none]
+      responses:
+        '200':
+          description: OK
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        default:
+          $ref: '#/components/responses/InternalError'
+      security:
+      - bearerAuth: []
+
+  /files/{id}/download:
+    get:
+      tags:
+      - access
+      description: "Returns the file stored under the `id` with the original MIME type"
+      parameters:
+      - in: header
+        name: Range
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: "File ID"
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/gif:
+              schema:
+                type: string
+                format: binary
+
+            video/mpeg:
+              schema:
+                type: string
+                format: binary
+            video/mp4:
+              schema:
+                type: string
+                format: binary
+            video/x-msvideo:
+              schema:
+                type: string
+                format: binary
+            video/x-sgi-movie:
+              schema:
+                type: string
+                format: binary
+
+            text/plain:
+              schema:
+                type: string
+                format: binary
+            text/comma-separated-values:
+              schema:
+                type: string
+                format: binary
+
+            application/msexcel:
+              schema:
+                type: string
+                format: binary
+            application/mspowerpoint:
+              schema:
+                type: string
+                format: binary
+            application/msword:
+              schema:
+                type: string
+                format: binary
+
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+            application/zip:
+              schema:
+                type: string
+                format: binary
+            application/gzip:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: string
+                format: binary
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        default:
+          $ref: '#/components/responses/InternalError'
+      security:
+      - bearerAuth: []
+
+
+components:
+  responses:
+    NotFound:
+      description: The specified resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+    Unauthorized:
+      description: Authorization information is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+    Forbidden:
+      description: Access denied.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+    InternalError:
+      description: Internal Error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InternalError'
+
+  schemas:
+    FileData:
+      properties:
+        filename:
+          type: string
+          description: "The original filename submitted by the e.g. browser during upload"
+          example: "myfile.png"
+        refId:
+          type: string
+          description: "An array of reference ids to which this file is related to"
+        tags:
+          type: array
+          description: "A list of categories which apply to this field"
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: datetime
+          description: "Time, when this file has been uploaded"
+        updatedAt:
+          type: string
+          format: datetime
+          description: "Time, when this file has been updated"
+        createdBy:
+          type: string
+          description: "User id of the user who created this file"
+        publicUrl:
+          type: string
+          description: "The full file URL which can be accessed by security token in path"
+        publicThumbnailUrl:
+          type: string
+          description: "The full file's thumbnail URL which can be accessed by security token in path"
+        privateUrl:
+          type: string
+          description: "The full file URL which can be accessed by security token in header"
+        privateThumbnailUrl:
+          type: string
+          description: "The full file's thumbnail URL which can be accessed by security token in header"
+        size:
+          type: number
+          description: "The size of the file in bytes"
+        contentType:
+          type: string
+          description: "The MIME type of the file submitted by the browser during upload. This field is also used when the client requests the file."
+        customData:
+          description: "An arbitrary object containing further information for this file which can be added to the file"
+          type: object
+        relativePublicUrl:
+          type: string
+          description: "Relative file's public url (without host & port)"
+        relativePrivateUrl:
+          type: string
+          description: "Relative file's private url (without host & port)"
+
+
+    FileDataUpdate:
+      properties:
+        filename:
+          type: string
+          description: "The original filename submitted by the e.g. browser during upload"
+          example: "myfile.png"
+        refId:
+          type: string
+          description: "A reference id to which this file is related to"
+        tags:
+          type: array
+          description: "A list of tags which apply to this file"
+          items:
+            type: string
+        customData:
+          description: "An arbitrary object containing further information for this file which can be added to the file"
+          type: object
+
+    FileBody:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+      required:
+      - file
+
+    NotFoundError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 404
+        message:
+          type: string
+          example: Resource not found
+      required:
+      - message
+
+    UnauthorizedError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 401
+        message:
+          type: string
+          example: Invalid Authorization
+      required:
+      - message
+
+    ForbiddenError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 403
+        message:
+          type: string
+          example: Access denied
+      required:
+      - message
+
+    InternalError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 500
+        message:
+          type: string
+          example: Internal Error
+      required:
+      - message
+
+
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
